@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Add Book</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+
+<body>
+<div th:insert="fragments/header :: header"></div>
+<div class="container my-5">
+    <h3>Add Book</h3>
+    <div class="card">
+        <div class="card-body">
+            <div class="col-md-10">
+                <form action="#" th:action="@{/addBook}" th:object="${book}"
+                      method="post">
+                    <div class="row">
+
+
+                        <div class="form-group col-md-8">
+                            <label for="name" class="col-form-label">Book Name</label>
+                            <input type="text" th:field="*{nameBook}" class="form-control" id="name"placeholder="Book Name" />
+                            <div style="color: red" th:if="${#fields.hasErrors('nameBook')}" th:errors="*{nameBook}"></div>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label for="serialName" class="col-form-label">Price </label>
+                            <input type="text" th:field="*{price}" class="form-control" id="serialName" placeholder="Price" />
+                            <div style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label class="col-form-label">Availible</label>
+                            <input type="radio" th:field="*{availible}" value="Ok" class="form-control"/>Ok
+                            <input type="radio" th:field="*{availible}" value="Not" class="form-control"/>Not
+                            <div style="color: red" th:if="${#fields.hasErrors('availible')}" th:errors="*{availible}"></div>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label class="col-form-label">Book Face</label>
+                            <input type="file" th:field="*{img}" class="form-control" id="img" placeholder="Link IMG" />
+                            <div style="color: red" th:if="${#fields.hasErrors('img')}" th:errors="*{img}"></div>
+                        </div>
+
+
+                        <div class="form-group col-md-8">
+                            <label  class="col-form-label">Category</label>
+                            <select th:field ="*{catagory}" class="form-control" >
+                                <option th:each="category: ${catagory}" th:value="${category.id}" th:text = "${category.nameCatagory}"></option>
+                                <div style="color: red" th:if="${#fields.hasErrors('catagory')}" th:errors="*{catagory}"></div>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label  class="col-form-label">Author</label>
+                            <select th:field ="*{author}" class="form-control" >
+                                <option th:each="authors: ${author}" th:value="${authors.id}" th:text = "${authors.name}"></option>
+                                <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+                            </select>
+                        </div>
+
+<!--                        <div class="form-group col-md-8">-->
+<!--                            <label class="col-form-label">Borrow</label>-->
+<!--                            <select th:field ="*{borrow}" class="form-control" >-->
+<!--                                <option th:each="borrow: ${borrow}" th:value="${borrow.id}" th:text = "${borrow.id}"></option>-->
+<!--                                <div style="color: red" th:if="${#fields.hasErrors('borrow')}" th:errors="*{borrow}"></div>-->
+<!--                            </select>-->
+<!--                        </div>-->
+
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-primary" value=" Submit ">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="fragments/footer :: footer"></div>
+</body>
+
+</html>
