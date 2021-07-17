@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="fragments/header_view"></div>
+<body>
+<div class="container" style="height: auto">
+    <header class="row">
+        <div class="col-sm-8 shopping-mall">
+            <h1>Online manager library</h1>
+            <h5>Libraries are critical and have distinctive utilizations for various people.</h5>
+        </div>
+        <img class="col-sm-4" src="../../images/header-object.png"/>
+    </header>
+    <th:block th:include="fragments/nav_view"></th:block>
+
+<div id="form-container" class="bg-white">
+    <img src="../../images/error_not_borrow.JPG" alt="error img">
+</div>
+</div>
+</body>
+</html>

@@ -11,7 +11,6 @@ public class Author {
     private int id;
     @NotBlank(message = "Không được để trống")
     private String name;
-    @NotBlank(message = "Không được để trống")
     private String img;
     @OneToMany(mappedBy = "author")
     Set<Book> books;

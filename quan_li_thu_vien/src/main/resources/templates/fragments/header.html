@@ -39,8 +39,12 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/authors">Authors </a>
             </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/viewborrow">Borrow</a>
+            </li>
         </ul>
-
+        <a class="text-danger" th:if="${session.userName != null}" th:text="'User: '+ ${session.userName}"></a>
+        <a href="/logout" class="btn"><i>Logout</i></a>
         <form th:action="@{/searchBook}" class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" name="keyword" id="keyword" type="text" placeholder="Search"
                    aria-label="Search" th:value="${keyword}">

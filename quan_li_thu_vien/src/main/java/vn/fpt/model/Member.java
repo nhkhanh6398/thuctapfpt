@@ -24,8 +24,6 @@ public class Member implements Validator {
     private String birthday;
     @NotBlank(message = "Không được để trống")
     private String address;
-    @OneToMany(mappedBy = "member")
-    Set<Borrow> borrows;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private AccountMember account;
@@ -33,15 +31,39 @@ public class Member implements Validator {
     public Member() {
     }
 
-    public Member(int id, @NotBlank(message = "Không được để trống") String nameMember, @NotBlank(message = "Không được để trống") String email, @NotBlank(message = "Không được để trống") String phone, @NotBlank(message = "Không được để trống") String birthday, @NotBlank(message = "Không được để trống") String address, Set<Borrow> borrows, AccountMember account) {
+    public Member(int id, @NotBlank(message = "Không được để trống") String nameMember, @NotBlank(message = "Không được để trống") String email, @NotBlank(message = "Không được để trống") String phone, @NotBlank(message = "Không được để trống") String birthday, @NotBlank(message = "Không được để trống") String address, AccountMember account) {
         this.id = id;
         this.nameMember = nameMember;
         this.email = email;
         this.phone = phone;
         this.birthday = birthday;
         this.address = address;
-        this.borrows = borrows;
         this.account = account;
+    }
+
+    public Member(@NotBlank(message = "Không được để trống") String nameMember, @NotBlank(message = "Không được để trống") String email, @NotBlank(message = "Không được để trống") String phone, @NotBlank(message = "Không được để trống") String birthday, @NotBlank(message = "Không được để trống") String address, AccountMember account) {
+        this.nameMember = nameMember;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.address = address;
+        this.account = account;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNameMember() {
+        return nameMember;
+    }
+
+    public void setNameMember(String nameMember) {
+        this.nameMember = nameMember;
     }
 
     public String getEmail() {
@@ -60,24 +82,6 @@ public class Member implements Validator {
         this.phone = phone;
     }
 
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNameMember() {
-        return nameMember;
-    }
-
-    public void setNameMember(String nameMember) {
-        this.nameMember = nameMember;
-    }
-
     public String getBirthday() {
         return birthday;
     }
@@ -94,24 +98,12 @@ public class Member implements Validator {
         this.address = address;
     }
 
-
-
     public AccountMember getAccount() {
         return account;
     }
 
     public void setAccount(AccountMember account) {
         this.account = account;
-    }
-
-
-
-    public Set<Borrow> getBorrows() {
-        return borrows;
-    }
-
-    public void setBorrows(Set<Borrow> borrows) {
-        this.borrows = borrows;
     }
 
     @Override

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div id="form-container" class="bg-white">
+    <form th:action="@{/borrowBook}" method="post" th:object="${book}">
+        <input type="hidden" th:field="*{id}">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" th:field="*{nameBook}" readonly="readonly">
+                <small th:errors="*{nameBook}"></small>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="quantity">Quantity</label>
+                <input type="text" class="form-control" id="quantity" placeholder="Quantity" th:field="*{quantity}" readonly="readonly">
+                <small th:errors="*{quantity}"></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="author">Author</label>
+                <input type="text" class="form-control" id="author" placeholder="Author" th:field="*{author.name}" readonly="readonly">
+                <small th:errors="*{author.name}"></small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="code">Borrow code</label><br>
+            <input class="form-control" id="code" type="text" name="usedCode" th:value="${availableCode.code}" readonly="readonly">
+        </div>
+        <button type="submit" class="btn btn-primary" th:disabled="${book.quantity == 0}">Borrow</button>
+    </form>
+</div>
+<script  src="../bootstrap/jquery-3.6.0.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

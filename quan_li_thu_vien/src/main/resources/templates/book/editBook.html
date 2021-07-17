@@ -34,17 +34,15 @@
                         </div>
 
                         <div class="form-group col-md-8">
-                            <label class="col-form-label">Availible</label>
-                            <input type="radio" th:field="*{availible}" value="Ok" class="form-control"/>Ok
-                            <input type="radio" th:field="*{availible}" value="Not" class="form-control"/>Not
-                            <div style="color: red" th:if="${#fields.hasErrors('availible')}" th:errors="*{availible}"></div>
+                            <label class="col-form-label">Quantity</label>
+                            <input type="text" th:field="*{quantity}"  class="form-control"/>
+                            <div style="color: red" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
                         </div>
                         <div class="form-group col-md-8">
                             <label class="col-form-label">Book Face</label>
                             <input type="file" th:field="*{img}" class="form-control" id="img" placeholder="Link IMG" />
                             <div style="color: red" th:if="${#fields.hasErrors('img')}" th:errors="*{img}"></div>
                         </div>
-
 
                         <div class="form-group col-md-8">
                             <label  class="col-form-label">Category</label>

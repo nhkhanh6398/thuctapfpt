@@ -5,11 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.fpt.model.AccountMember;
 import vn.fpt.model.Author;
 import vn.fpt.service.AuthorService;
 
@@ -20,8 +18,17 @@ public class AuthorController {
     AuthorService authorService;
 
     @GetMapping("/authors")
-    public String home(Model model){
+    public String home(Model model,@SessionAttribute(value = "accountMember", required = false) AccountMember accountMember,
+                       @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser){
+        if ("admin@gmail.com".equals(cookieUser)) {
+            accountMember = new AccountMember();
+            accountMember.setAccount(cookieUser);
+        }
+        if (accountMember == null || "guest".equals(accountMember.getAccount())){
+            return "redirect:/login";
+        }
         model.addAttribute("authors",authorService.findAllAuthors());
+
         return "/author/homeAuthor";
     }
     @GetMapping("/addAuthor")

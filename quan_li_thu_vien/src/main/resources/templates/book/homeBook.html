@@ -17,8 +17,7 @@
         <div class="card-body">
             <div th:switch="${book}" class="container my-5">
                 <p class="my-5">
-                    <p class="text-danger" th:text="'User: '+ ${session.userName}"></p>
-                    <a href="/logout" class="btn"><i>Logout</i></a>
+
                     <a href="/add" class="btn btn-primary">
                         <i class="fas fa-user-plus ml-2">  Add Book </i></a>
                 </p>
@@ -36,23 +35,23 @@
                                 <th>Price</th>
                                 <th>Author</th>
                                 <th>Catagory</th>
-                                <th>Availible</th>
+                                <th>Quantity</th>
                                 <th>Detail</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="book : ${book}">
-                                <td th:text="${book.id}"></td>
-                                <td th:text="${book.nameBook}"></td>
-                                <td th:text="${book.price}"></td>
-                                <td th:text="${book.author.name}"></td>
-                                <td th:text="${book.catagory.nameCatagory}"></td>
-                                <td th:text="${book.availible}"></td>
-                                <td><a th:href="@{/book/{id}(id=${book.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>
-                                <td><a th:href="@{/update/{id}(id=${book.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
-                                <td><a th:href="@{/delete/{id}(id=${book.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                            <tr th:each="books : ${book}">
+                                <td th:text="${books.id}"></td>
+                                <td th:text="${books.nameBook}"></td>
+                                <td th:text="${books.price} +'vnd'"></td>
+                                <td th:text="${books.author.name}"></td>
+                                <td th:text="${books.catagory.nameCatagory}"></td>
+                                <td th:text="${books.quantity}"></td>
+                                <td><a th:href="@{/book/{id}(id=${books.id})}" class="btn btn-primary"><i class="fas fa-marker ml-2"></i></a></td>
+                                <td><a th:href="@{/update/{id}(id=${books.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
+                                <td><a th:href="@{/delete/{id}(id=${books.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
                             </tr>
                             </tbody>
                         </table>

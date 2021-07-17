@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="view.css" type="text/css">
-    <link rel="shortcut icon" href="images/short_icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-    <title>K_Library</title>
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
-</head>
+<div th:insert="fragments/header_view"></div>
 <body>
 <div class="container" style="height: auto">
     <header class="row">
@@ -28,59 +8,9 @@
             <h1>Online manager library</h1>
             <h5>Libraries are critical and have distinctive utilizations for various people.</h5>
         </div>
-        <img class="col-sm-4" src="images/header-object.png"/>
+        <img class="col-sm-4" src="../../images/header-object.png"/>
     </header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <i class="fa fa-home-lg-alt"></i>
-        <a class="navbar-brand" href="/"> Trang chủ</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"><img src="/bootstrap-icons-1.4.1/card-list.svg"> Giới thiệu <span
-                            class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Liên hệ <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Góp ý <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Hỏi đáp <span class="sr-only">(current)</span></a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tài khoản
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/login">Đăng nhập</a>
-                        <a class="dropdown-item" href="#">Quên mật khẩu</a>
-                        <a class="dropdown-item" href="/createAccount">Đăng kí thành viên</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Đăng xuất</a>
-                        <a class="dropdown-item" href="#">Đổi mật khẩu</a>
-                        <a class="dropdown-item" href="#">Cập nhật hồ sơ</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Đơn hàng</a>
-                        <a class="dropdown-item" href="#">Hàng đã mua</a>
-                    </div>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="nav-link" href="#">English</a>
-                </li>
-                <li>
-                    <a class="nav-link" href="#">Tiếng việt</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <th:block th:include="fragments/nav_view"></th:block>
     <div class="container-fluid mt-3">
         <div class="row">
             <article class="col-sm-9">
@@ -92,7 +22,9 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <img th:src="@{images/{img}(img=${books.getImg()})}" class="img-fluid img-thumbnail">
+                                <a th:href="@{/bookview/{id}(id=${books.id})}"><img
+                                        th:src="@{../../images/{img}(img=${books.getImg()})}"
+                                        class="img-fluid img-thumbnail"></a>
                             </div>
                             <div class="card-footer" th:text="'Author: '+${books.author.getName()}">
                             </div>
@@ -101,24 +33,29 @@
                 </div>
             </article>
             <aside class="col-sm-3">
-                <div class="card card-default">
-                    <div class="card-body">
-                        <form th:action="@{/findBookByName}" method="post">
-                            <input name="key" placeholder="Keywords" class="form-control"/>
-                        </form>
-                    </div>
-                </div>
+                <!--                <div class="card card-default">-->
+                <!--                    <div class="card-body">-->
+                <!--                        <form th:action="@{/findBookByName}" method="post">-->
+                <!--                            <input name="key" placeholder="Keywords" class="form-control"/>-->
+                <!--                        </form>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div class="card">
                     <div class="card-header">
                         <span class="glyphicon glyphicon-th-list"></span>
                         <strong>Thể Loại</strong>
                     </div>
                     <div class="list-group" th:each="catagorys: ${catagory}">
-                        <a th:href="@{/{id}(id=${catagorys.nameCatagory})}" class="list-group-item"
+                        <a th:href="@{/catagorybook/{id}(id=${catagorys.nameCatagory})}" class="list-group-item"
                            th:text="${catagorys.nameCatagory}"></a>
                     </div>
                 </div>
             </aside>
+        </div>
+        <div>
+            <a th:href="@{'/'(page=${book.number - 1})}">Previous</a>
+            <span th:text="${book.number + 1}"></span>/<span th:text="${book.totalPages}"></span>
+            <a th:href="@{'/'(page=${book.number + 1})}">Next</a>
         </div>
         <footer class="card card-default">
             <div class="card-heading text-center">
@@ -127,6 +64,36 @@
         </footer>
     </div>
 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Search</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/search}" method="post">
+                <div class="modal-body">
+                    <label>Input: </label>
+                    <input class="form-control" type="text" name="key" placeholder="Keyword...">
+                    <label>Author: </label>
+                    <select class="form-control" name="change">
+                        <option value="all">--!--</option>
+                        <option value="book">Book</option>
+                        <option value="author">Author</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Search"></input>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

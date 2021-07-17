@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="fragments/header_view"></div>
+<body>
+<div class="container" style="height: auto">
+    <header class="row">
+        <div class="col-sm-8 shopping-mall">
+            <h1>Online manager library</h1>
+            <h5>Libraries are critical and have distinctive utilizations for various people.</h5>
+        </div>
+        <img class="col-sm-4" src="../../images/header-object.png"/>
+    </header>
+    <th:block th:include="fragments/nav_view"></th:block>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <article class="col-sm-9">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="poly-prod mb-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="card-title" th:text="${book.nameBook}">
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <img th:src="@{../../images/{img}(img=${book.getImg()})}"
+                                         class="img-fluid img-thumbnail">
+                                    <p th:text="'Quantity: '+ ${book.quantity}"></p>
+                                </div>
+                                <div class="card-footer" th:text="'Author: '+${book.author.getName()}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="poly-prod mb-2">
+                            <div class="text">
+                                <h6 class="card-title" th:text="${book.nameBook}">
+                                </h6>
+                                <p th:text="'Quantity: '+ ${book.quantity}"></p>
+                            </div>
+                            <div class="text" th:text="'Author: '+${book.author.getName()}">
+                            </div>
+                            <a href="/login" th:if="${session.accountMember == null}" class="btn btn-primary"
+                            >Sign in to borrow books</a>
+                            <a th:href="@{/borrow(id=${book.id})}"
+                               th:if="${book.quantity > 0 && session.accountMember != null}" class="btn btn-primary"
+                               data-toggle="modal" data-target="#exampleModalCenter1">Borrow</a>
+                            <a th:href="@{/return(id=${book.id})}" th:if="${session.accountMember!= null}"
+                               class="btn btn-primary"
+                               data-toggle="modal" data-target="#exampleModalCenter3">Return</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <aside class="col-sm-3">
+                <!--                <div class="card card-default">-->
+                <!--                    <div class="card-body">-->
+                <!--                        <form th:action="@{/findBookByName}" method="post">-->
+                <!--                            <input name="key" placeholder="Keywords" class="form-control"/>-->
+                <!--                        </form>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="glyphicon glyphicon-th-list"></span>
+                        <strong>Thể Loại</strong>
+                    </div>
+                    <div class="list-group" th:each="catagorys: ${catagory}">
+                        <a th:href="@{/catagorybook/{id}(id=${catagorys.nameCatagory})}" class="list-group-item"
+                           th:text="${catagorys.nameCatagory}"></a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="card card-default">
+            <div class="card-heading text-center">
+                © 2020 Copyright: <a href="/">InterShipFpt.com</a>
+            </div>
+        </footer>
+    </div>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Search</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/search}" method="post">
+                <div class="modal-body">
+                    <label>Input: </label>
+                    <input class="form-control" type="text" name="key" placeholder="Keyword...">
+                    <label>Author: </label>
+                    <select class="form-control" name="change">
+                        <option value="all">--!--</option>
+                        <option value="book">Book</option>
+                        <option value="author">Author</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Search"></input>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle2">Borrow</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/borrowBook}" method="post" th:object="${book}">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" th:field="*{nameBook}"
+                                   readonly="readonly">
+                            <small th:errors="*{nameBook}"></small>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="quantity">Quantity</label>
+                            <input type="text" class="form-control" id="quantity" placeholder="Quantity"
+                                   th:field="*{quantity}" readonly="readonly">
+                            <small th:errors="*{quantity}"></small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="author">Author</label>
+                            <input type="text" class="form-control" id="author" placeholder="Author"
+                                   th:field="*{author.name}" readonly="readonly">
+                            <small th:errors="*{author.name}"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="code">Borrow code</label><br>
+                        <input class="form-control" id="code" type="text" name="usedCode"
+                               th:value="${availableCode.code}" readonly="readonly">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" th:disabled="${book.quantity == 0}"
+                                onclick="borrow()">Borrow
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle3">Return Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/returnBook}" method="post" th:object="${book}">
+                <div class="modal-body">
+                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{img}">
+                    <input type="hidden" th:field="*{catagory.nameCatagory}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" th:field="*{nameBook}"
+                                   readonly="readonly">
+                            <small th:errors="*{nameBook}"></small>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="quantity">Quantity</label>
+                            <input type="text" class="form-control" placeholder="Quantity"
+                                   th:field="*{quantity}" readonly="readonly">
+                            <small th:errors="*{quantity}"></small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="author">Author</label>
+                            <input type="text" class="form-control" placeholder="Author"
+                                   th:field="*{author.name}" readonly="readonly">
+                            <small th:errors="*{author.name}"></small>
+                        </div>
+                    </div>
+                    <label>Code Book: </label>
+                    <!--                <th:block th:object="${returnCodeWrapper}">-->
+                    <input class="form-control" type="number" name="returnCodeWrapper">
+                    <!--                    <small th:errors="*{returnCode}"></small>-->
+                    <!--                </th:block>-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Return Book"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    let code = document.getElementById("code").value;
+
+    function borrow() {
+        alert("Borrow! " + code);
+    }
+</script>
+</body>
+</html>
