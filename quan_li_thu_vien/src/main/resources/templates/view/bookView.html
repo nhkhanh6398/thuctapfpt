@@ -41,12 +41,12 @@
                             </div>
                             <div class="text" th:text="'Author: '+${book.author.getName()}">
                             </div>
-                            <a href="/login" th:if="${session.accountMember == null}" class="btn btn-primary"
+                            <a href="/login" th:if="${user == null}" class="btn btn-primary"
                             >Sign in to borrow books</a>
                             <a th:href="@{/borrow(id=${book.id})}"
-                               th:if="${book.quantity > 0 && session.accountMember != null}" class="btn btn-primary"
+                               th:if="${book.quantity > 0 && user != null}" class="btn btn-primary"
                                data-toggle="modal" data-target="#exampleModalCenter1">Borrow</a>
-                            <a th:href="@{/return(id=${book.id})}" th:if="${session.accountMember!= null}"
+                            <a th:href="@{/return(id=${book.id})}" th:if="${user!= null}"
                                class="btn btn-primary"
                                data-toggle="modal" data-target="#exampleModalCenter3">Return</a>
                         </div>
@@ -125,6 +125,7 @@
             <div class="modal-body">
                 <form th:action="@{/borrowBook}" method="post" th:object="${book}">
                     <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:value="${account}">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="title">Title</label>

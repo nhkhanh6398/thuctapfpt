@@ -11,8 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.fpt.exception.NotAvailableException;
 import vn.fpt.exception.WrongCodeException;
+import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
 import vn.fpt.model.CodeBook;
+import vn.fpt.service.AccountService;
 import vn.fpt.service.BookService;
 import vn.fpt.service.CatagoryService;
 import vn.fpt.service.CodeBookService;
@@ -21,6 +23,7 @@ import vn.fpt.validation.ReturnCodeWrapper;
 import java.util.List;
 
 @Controller
+@SessionAttributes("accountMember")
 public class ViewController {
     @Autowired
     BookService bookService;
@@ -28,10 +31,15 @@ public class ViewController {
     CatagoryService catagoryService;
     @Autowired
     CodeBookService codeBookService;
+    @Autowired
+    AccountService accountService;
 
-
+    @ModelAttribute("accountMember")
+    public AccountMember accountMember() {
+        return new AccountMember();
+    }
     @GetMapping("/")
-    public String homeView(Model model, @PageableDefault (value = 6) Pageable pageable ) {
+    public String homeView(Model model, @PageableDefault (value = 6) Pageable pageable) {
         model.addAttribute("book", bookService.findAll(pageable));
         model.addAttribute("catagory", catagoryService.findAllCatagory());
         return "/view/view";
@@ -72,9 +80,10 @@ public class ViewController {
         return null;
     }
     @GetMapping("/bookview/{id}")
-    public String bookView(@PathVariable int id, Model model,@ModelAttribute ReturnCodeWrapper returnCodeWrapper) throws NotAvailableException {
+    public String bookView(@PathVariable int id, Model model,@ModelAttribute ReturnCodeWrapper returnCodeWrapper,@SessionAttribute("accountMember") AccountMember accountMember) throws NotAvailableException {
         Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
+        model.addAttribute("user", accountMember.getAccount());
         model.addAttribute("catagory", catagoryService.findAllCatagory());
         model.addAttribute("availableCode", bookService.getNextAvailableCode(book));
         model.addAttribute("returnCodeWrapper", returnCodeWrapper);

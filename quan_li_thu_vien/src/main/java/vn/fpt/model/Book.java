@@ -20,14 +20,19 @@ public class Book {
     private int quantity;
 
     private String img;
-    @ManyToOne(targetEntity = Author.class,cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Author.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author author;
-    @ManyToOne(targetEntity = Catagory.class,cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Catagory.class)
     @JoinColumn(name = "catagory_id", referencedColumnName = "id")
     private Catagory catagory;
     @OneToMany(mappedBy = "books",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CodeBook> codeBooks = new LinkedHashSet<>();
+    @ManyToMany
+    @JoinTable(name = "borrow_book", joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_account"))
+    private Set<AccountMember> accountMembers;
+
 
     public void generateCode(CodeBook code) {
         codeBooks.add(code);
@@ -126,5 +131,13 @@ public class Book {
 
     public void setCodeBooks(Set<CodeBook> codeBooks) {
         this.codeBooks = codeBooks;
+    }
+
+    public Set<AccountMember> getAccountMembers() {
+        return accountMembers;
+    }
+
+    public void setAccountMembers(Set<AccountMember> accountMembers) {
+        this.accountMembers = accountMembers;
     }
 }

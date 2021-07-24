@@ -20,6 +20,7 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 //    @Query("select b from Book b where b.nameBook = :name")
     List<Book> findByNameBookContaining(String name);
 
+
 //    @Query("SELECT b FROM Book b WHERE b.nameBook = :name")
 //    List<Book> searchByName(@Param("name") String keyword);
     @Query("select b \n" +

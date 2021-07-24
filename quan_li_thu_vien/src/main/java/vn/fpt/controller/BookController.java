@@ -15,10 +15,7 @@ import vn.fpt.exception.QuantityZeroException;
 import vn.fpt.exception.WrongCodeException;
 import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
-import vn.fpt.service.AuthorService;
-import vn.fpt.service.BookService;
-import vn.fpt.service.CatagoryService;
-import vn.fpt.service.CodeBookService;
+import vn.fpt.service.*;
 
 @Controller
 public class BookController {
@@ -32,20 +29,28 @@ public class BookController {
     CodeBookService codeBookService;
 
 
+
+
     @GetMapping("/books")
     public String homeBook(@PageableDefault(value = 5) Pageable pageable, Model model,
-                           @SessionAttribute(value = "accountMember", required = false) AccountMember accountMember,
+                           @SessionAttribute(value = "accountMember") AccountMember accountMember,
                            @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser) {
 
         if ("admin@gmail.com".equals(cookieUser)) {
             accountMember = new AccountMember();
             accountMember.setAccount(cookieUser);
         }
-        if (accountMember == null || "guest".equals(accountMember.getAccount())){
+        if (accountMember.getAccount()!=null){
+            model.addAttribute("book", bookService.findAll(pageable));
+            return "/book/homeBook";
+        }else {
             return "redirect:/login";
         }
-        model.addAttribute("book", bookService.findAll(pageable));
-        return "/book/homeBook";
+//        if (accountMember == null || "guest".equals(accountMember.getAccount())){
+//            return "redirect:/login";
+//        }
+//        model.addAttribute("book", bookService.findAll(pageable));
+//        return "/book/homeBook";
     }
 
     @GetMapping("/book/{id}")
@@ -125,16 +130,19 @@ public class BookController {
                         @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser) throws NotAvailableException {
         Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
+        model.addAttribute("account",accountMember.getAccount());
         model.addAttribute("availableCode", bookService.getNextAvailableCode(book));
         return "/view/bookView";
     }
 
     @PostMapping("/borrowBook")
-    public String borrowBook(@RequestParam int id,@ModelAttribute Book book, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException {
+    public String borrowBook(@RequestParam int id,@ModelAttribute Book book,@SessionAttribute(value = "accountMember", required = false)
+            AccountMember accountMember, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException {
         Book books = bookService.findBookById(id);
         if (books.getQuantity()<=0){
             throw new QuantityZeroException();
        }
+
         bookService.borrow(book, usedCode);
         redirectAttributes.addFlashAttribute("message", usedCode + "borrow");
         return "redirect:/bookview/" + book.getId();

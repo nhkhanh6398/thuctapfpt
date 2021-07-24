@@ -15,6 +15,7 @@ import vn.fpt.service.BookService;
 import vn.fpt.service.CatagoryService;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -30,12 +31,13 @@ public class LoginController {
 
     @ModelAttribute("accountMember")
     public AccountMember accountMember() {
-        return new AccountMember("guest", " ");
+        return new AccountMember();
     }
 
     @GetMapping("/login")
     public String login() {
-        return "index";
+//        System.out.println(accountService.findAllByBooks());
+            return "index";
     }
 
     @PostMapping("/loginUser")
@@ -73,7 +75,15 @@ public class LoginController {
     }}
 
     @GetMapping("/logout")
-    public String logOut(HttpSession session) {
+    public String logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies){
+            if (cookie.getName().equals("loginCookie") || cookie.getName().equals("loginPass")){
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+        }
         session.removeAttribute("userName");
         return "redirect:/";
     }

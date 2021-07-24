@@ -81,6 +81,7 @@ public class BookServiceImpl implements BookService {
 //        bookRepository.save(book);
     }
 
+
     @Override
     public CodeBook getNextAvailableCode(Book book) throws NotAvailableException {
 
@@ -93,34 +94,39 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void returnBook(Book book, Integer returnCode) throws NotAvailableException, WrongCodeException {
-//        CodeBook codeBook = codeBookService.findByBooks_IdAndCode(book.getId(), returnCode);
-//        Book book1 = bookRepository.findById(book.getId()).orElse(null);
-//        if (codeBook != null){
-//            codeBook.setStatus(new Status(1));
-//            codeBookService.save(codeBook);
-//        }
-//        if (book1 != null){
-//            book1.setQuantity(book1.getQuantity() + 1);
-//            bookRepository.save(book1);
-//        }
-        List<CodeBook> codeList = codeBookService.findUsedCodeByBookId(book.getId());
-        if (codeList.size() == 0) {
+
+        CodeBook codeBook = codeBookService.findByBooks_IdAndCode(book.getId(), returnCode);
+
+        if (codeBook != null){
+            codeBook.setStatus(new Status(1));
+            codeBookService.save(codeBook);
+            Book book1 = bookRepository.findById(book.getId()).orElse(null);
+            if (book1 != null){
+                book1.returnBook();
+                bookRepository.save(book1);
+            }
+        } else {
             throw new NotAvailableException();
         }
-        boolean isCorrectCode = false;
-        for (CodeBook code : codeList) {
-            if (code.getCode().equals(returnCode)) {
-                code.setStatus(new Status(1, "available"));
-                codeBookService.save(code);
-                book.returnBook();
-                bookRepository.save(book);
-                isCorrectCode = true;
-                break;
-            }
-        }
-        if (!isCorrectCode) {
-            throw new WrongCodeException();
-        }
+
+//        List<CodeBook> codeList = codeBookService.findUsedCodeByBookId(book.getId());
+//        if (codeList.size() == 0) {
+//            throw new NotAvailableException();
+//        }
+//        boolean isCorrectCode = false;
+//        for (CodeBook code : codeList) {
+//            if (code.getCode().equals(returnCode)) {
+//                code.setStatus(new Status(1, "available"));
+//                codeBookService.save(code);
+//                book.returnBook();
+//                bookRepository.save(book);
+//                isCorrectCode = true;
+//                break;
+//            }
+//        }
+//        if (!isCorrectCode) {
+//            throw new WrongCodeException();
+//        }
     }
 
     @Override
