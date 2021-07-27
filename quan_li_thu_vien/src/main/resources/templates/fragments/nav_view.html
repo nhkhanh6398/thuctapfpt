@@ -39,7 +39,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <!-- Button trigger modal -->
-            <a class="text-danger" th:if="${user != null}" th:text="'User: '+ ${user}"></a>
+            <button class="btn btn-light" th:if="${user != null}" th:text="${user}"></button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
                 Seacrh
             </button>

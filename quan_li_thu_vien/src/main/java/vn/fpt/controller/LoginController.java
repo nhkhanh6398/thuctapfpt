@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.fpt.model.AccountBook;
 import vn.fpt.model.AccountMember;
+import vn.fpt.model.Book;
 import vn.fpt.service.AccountService;
 import vn.fpt.service.BookService;
 import vn.fpt.service.CatagoryService;
@@ -18,6 +20,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @SessionAttributes("accountMember")
@@ -37,6 +41,7 @@ public class LoginController {
     @GetMapping("/login")
     public String login() {
 //        System.out.println(accountService.findAllByBooks());
+
             return "index";
     }
 
@@ -49,6 +54,7 @@ public class LoginController {
         if (account != null) {
             accountMember.setAccount(user);
             accountMember.setPass(pass);
+            accountMember.setId(account.getId());
             if (!check.equals("")) {
                 Cookie cookie1 = new Cookie("loginCookie", user);
                 Cookie cookie2 = new Cookie("loginPass", pass);

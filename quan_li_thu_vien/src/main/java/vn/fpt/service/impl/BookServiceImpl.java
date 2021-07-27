@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.fpt.exception.NotAvailableException;
 import vn.fpt.exception.WrongCodeException;
+import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
 import vn.fpt.model.CodeBook;
 import vn.fpt.model.Status;
+import vn.fpt.repository.AccountMemberRepository;
 import vn.fpt.repository.BookRepository;
 import vn.fpt.service.BookService;
 import vn.fpt.service.CodeBookService;
@@ -23,6 +25,8 @@ public class BookServiceImpl implements BookService {
     BookRepository bookRepository;
     @Autowired
     CodeBookService codeBookService;
+    @Autowired
+    AccountMemberRepository accountMemberRepository;
     @Override
     public List<Book> findAll() {
         return bookRepository.findAll();
@@ -57,7 +61,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void borrow(Book book, Integer usedCode) {
+    public void borrow(Book book, Integer usedCode, AccountMember accountMember) throws NotAvailableException {
 //        List<CodeBook> codeList = codeBookService.findAllCodeByBookId(book.getId());
 //        for (CodeBook code : codeList) {
 //            if (code.getCode().equals(usedCode)) {
@@ -65,18 +69,27 @@ public class BookServiceImpl implements BookService {
 //                break;
 //            }
 //        }
+
         CodeBook codeBook = codeBookService.findByBooks_IdAndCode(book.getId(), usedCode);
         Book book1 = bookRepository.findById(book.getId()).orElse(null);
+        AccountMember accountMember1 = accountMemberRepository.findById(accountMember.getId()).orElse(null);
         if (codeBook != null){
             codeBook.setStatus(new Status(2));
             codeBookService.save(codeBook);
         }
-        if (book1 != null){
+        if (accountMember1!=null&&book1!=null){
+
+            accountMember1.getBooks().add(book1);
+            accountMemberRepository.save(accountMember1);
+            book1.getAccountMembers().add(accountMember);
             if (book1.getQuantity()>0) {
                 book1.setQuantity(book1.getQuantity() - 1);
             }
             bookRepository.save(book1);
         }
+
+//        throw new NotAvailableException();
+
 //        book.borrow();
 //        bookRepository.save(book);
     }
@@ -93,15 +106,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void returnBook(Book book, Integer returnCode) throws NotAvailableException, WrongCodeException {
+    public void returnBook(Book book, Integer returnCode,AccountMember accountMember) throws NotAvailableException, WrongCodeException {
 
         CodeBook codeBook = codeBookService.findByBooks_IdAndCode(book.getId(), returnCode);
+
 
         if (codeBook != null){
             codeBook.setStatus(new Status(1));
             codeBookService.save(codeBook);
             Book book1 = bookRepository.findById(book.getId()).orElse(null);
-            if (book1 != null){
+            AccountMember accountMember1 = accountMemberRepository.findById(accountMember.getId()).orElse(null);
+            if (book1 != null&&accountMember1!=null){
+                accountMember1.getBooks().remove(book1);
+                accountMemberRepository.save(accountMember1);
+                book1.getAccountMembers().remove(accountMember1);
                 book1.returnBook();
                 bookRepository.save(book1);
             }

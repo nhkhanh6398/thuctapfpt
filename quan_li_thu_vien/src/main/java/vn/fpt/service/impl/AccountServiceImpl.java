@@ -19,6 +19,11 @@ public class AccountServiceImpl implements AccountService {
         return accountMemberRepository.checkLogin(user,pass);
     }
 
+    @Override
+    public List<AccountMember> finAll() {
+        return accountMemberRepository.findAll();
+    }
+
 //    @Override
 //    public Set<Book> findAllByBooks() {
 //        return accountMemberRepository.findAllByBooks();

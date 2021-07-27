@@ -16,13 +16,6 @@
     <div class="card">
         <div class="card-body">
             <div th:switch="${listBorrow}" class="container my-5">
-                <p class="my-5">
-                <a href="/add" class="btn btn-primary">
-                    <i class="fas fa-user-plus ml-2">  Add Book </i></a>
-                </p>
-                <th:block th:if="${message}">
-                    <p th:text="${message}"></p>
-                </th:block>
                 <div class="col-md-12">
                     <h2 th:case="null">No record found !!</h2>
                     <div th:case="*">
@@ -30,11 +23,10 @@
                             <thead>
                             <tr>
                                 <th>ID </th>
-                                <th>Book ID:</th>
+                                <th>Book ID</th>
                                 <th>Name Book</th>
                                 <th>Status</th>
                                 <th>Quantity</th>
-
                             </tr>
                             </thead>
                             <tbody>

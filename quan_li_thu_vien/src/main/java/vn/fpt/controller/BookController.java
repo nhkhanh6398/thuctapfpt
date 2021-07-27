@@ -13,9 +13,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.fpt.exception.NotAvailableException;
 import vn.fpt.exception.QuantityZeroException;
 import vn.fpt.exception.WrongCodeException;
+import vn.fpt.model.AccountBook;
 import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
 import vn.fpt.service.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class BookController {
@@ -27,6 +31,8 @@ public class BookController {
     CatagoryService catagoryService;
     @Autowired
     CodeBookService codeBookService;
+    @Autowired
+    AccountService accountService;
 
 
 
@@ -66,6 +72,18 @@ public class BookController {
         model.addAttribute("catagory", catagoryService.findAllCatagory());
         model.addAttribute("author", authorService.findAllAuthors());
         return "/book/addBook";
+    }
+    @GetMapping("/accountBook")
+    public String manage(Model model){
+        List<AccountBook> accountBooks = new ArrayList<>();
+        List<AccountMember> accountMembers = accountService.finAll();
+        for (AccountMember accountMember: accountMembers){
+            for(Book book : accountMember.getBooks()){
+                accountBooks.add(new AccountBook(accountMember.getAccount(),book.getNameBook()));
+            }
+        }
+        model.addAttribute("list",accountBooks);
+        return "/book/manage";
     }
 
     @PostMapping("/addBook")
@@ -137,13 +155,13 @@ public class BookController {
 
     @PostMapping("/borrowBook")
     public String borrowBook(@RequestParam int id,@ModelAttribute Book book,@SessionAttribute(value = "accountMember", required = false)
-            AccountMember accountMember, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException {
+            AccountMember accountMember, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException, NotAvailableException {
         Book books = bookService.findBookById(id);
         if (books.getQuantity()<=0){
             throw new QuantityZeroException();
        }
 
-        bookService.borrow(book, usedCode);
+        bookService.borrow(book, usedCode,accountMember);
         redirectAttributes.addFlashAttribute("message", usedCode + "borrow");
         return "redirect:/bookview/" + book.getId();
     }

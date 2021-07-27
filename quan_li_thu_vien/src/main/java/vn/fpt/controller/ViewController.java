@@ -97,7 +97,8 @@ public class ViewController {
         return "/view/bookView";
     }
     @PostMapping("/returnBook")
-    public String returnBook(@ModelAttribute Book book, @RequestParam  Integer returnCodeWrapper
+    public String returnBook(@ModelAttribute Book book,@SessionAttribute(value = "accountMember", required = false)
+            AccountMember accountMember, @RequestParam  Integer returnCodeWrapper
             ,Model model) throws WrongCodeException, NotAvailableException {
         if (returnCodeWrapper < 10000 || returnCodeWrapper>99999){
 //            model.addAttribute("returnCodeWrapper", returnCodeWrapper);
@@ -111,7 +112,7 @@ public class ViewController {
 //                return "/view/bookView";
 //            }
 //        }
-        bookService.returnBook(book,returnCodeWrapper);
+        bookService.returnBook(book,returnCodeWrapper,accountMember);
         model.addAttribute("book", book);
         return "redirect:/bookview/"+book.getId();
     }

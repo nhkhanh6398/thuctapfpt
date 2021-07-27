@@ -2,6 +2,7 @@ package vn.fpt.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ public class AccountMember  {
     @OneToOne(mappedBy = "account")
     private Member member;
     @ManyToMany(mappedBy = "accountMembers")
-    Set<Book> books;
+    List<Book> books;
 
     public AccountMember(int id, String account, String pass, Member member) {
         this.id = id;
@@ -25,7 +26,7 @@ public class AccountMember  {
         this.member = member;
     }
 
-    public AccountMember(int id, String account, String pass, Date dateCreate, Member member, Set<Book> books) {
+    public AccountMember(int id, String account, String pass, Date dateCreate, Member member, List<Book> books) {
         this.id = id;
         this.account = account;
         this.pass = pass;
@@ -57,11 +58,11 @@ public class AccountMember  {
     public AccountMember() {
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 

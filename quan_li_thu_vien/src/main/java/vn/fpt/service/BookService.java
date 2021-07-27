@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import vn.fpt.exception.NotAvailableException;
 import vn.fpt.exception.WrongCodeException;
+import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
 import vn.fpt.model.CodeBook;
 
@@ -16,9 +17,9 @@ public interface BookService {
     void save(Book book);
     Book findBookById(int id);
     List<Book> findBookByNameCatagory(String  name);
-    void borrow(Book book, Integer usedCode);
+    void borrow(Book book, Integer usedCode, AccountMember accountMember) throws NotAvailableException;
     CodeBook getNextAvailableCode(Book book) throws NotAvailableException;
-    void returnBook(Book book, Integer returnCode) throws NotAvailableException, WrongCodeException;
+    void returnBook(Book book, Integer returnCode,AccountMember accountMember) throws NotAvailableException, WrongCodeException;
     boolean checkNoUsedCode(Book book);
     void update(Book book);
     void remove(int id);

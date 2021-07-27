@@ -32,6 +32,7 @@
                             <tr>
                                 <th>ID </th>
                                 <th>Book Name</th>
+                                <th>Image Book</th>
                                 <th>Price</th>
                                 <th>Author</th>
                                 <th>Catagory</th>
@@ -44,6 +45,7 @@
                             <tbody>
                             <tr th:each="books : ${book}">
                                 <td th:text="${books.id}"></td>
+                                <td><img width="150px" height="100px" th:src="@{images/{img}(img=${books.getImg()})}"></td>
                                 <td th:text="${books.nameBook}"></td>
                                 <td th:text="${books.price} +'vnd'"></td>
                                 <td th:text="${books.author.name}"></td>

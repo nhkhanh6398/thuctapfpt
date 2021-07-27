@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,10 +16,10 @@ public class Book {
     private String nameBook;
     @Min(value = 0)
     private double price;
-//    @NotBlank(message = "Không được để trống")
+
     @Min(0)
     private int quantity;
-
+    @NotBlank(message = "Không được để trống")
     private String img;
     @ManyToOne(targetEntity = Author.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
@@ -31,7 +32,7 @@ public class Book {
     @ManyToMany
     @JoinTable(name = "borrow_book", joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_account"))
-    private Set<AccountMember> accountMembers;
+    private List<AccountMember> accountMembers;
 
 
     public void generateCode(CodeBook code) {
@@ -133,11 +134,11 @@ public class Book {
         this.codeBooks = codeBooks;
     }
 
-    public Set<AccountMember> getAccountMembers() {
+    public List<AccountMember> getAccountMembers() {
         return accountMembers;
     }
 
-    public void setAccountMembers(Set<AccountMember> accountMembers) {
+    public void setAccountMembers(List<AccountMember> accountMembers) {
         this.accountMembers = accountMembers;
     }
 }

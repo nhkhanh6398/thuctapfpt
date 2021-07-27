@@ -9,4 +9,5 @@ import java.util.Set;
 public interface AccountService {
     AccountMember checkLogin(String user, String pass);
 //    Set<Book> findAllByBooks();
+    List<AccountMember> finAll();
 }
