@@ -16,8 +16,10 @@ import vn.fpt.exception.WrongCodeException;
 import vn.fpt.model.AccountBook;
 import vn.fpt.model.AccountMember;
 import vn.fpt.model.Book;
+import vn.fpt.repository.AccountMemberRepository;
 import vn.fpt.service.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,30 +35,17 @@ public class BookController {
     CodeBookService codeBookService;
     @Autowired
     AccountService accountService;
+    @Autowired
+    AccountMemberRepository accountMemberRepository;
 
 
 
 
     @GetMapping("/books")
-    public String homeBook(@PageableDefault(value = 5) Pageable pageable, Model model,
-                           @SessionAttribute(value = "accountMember") AccountMember accountMember,
-                           @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser) {
+    public String homeBook(@PageableDefault(value = 5) Pageable pageable, Model model) {
 
-        if ("admin@gmail.com".equals(cookieUser)) {
-            accountMember = new AccountMember();
-            accountMember.setAccount(cookieUser);
-        }
-        if (accountMember.getAccount()!=null){
-            model.addAttribute("book", bookService.findAll(pageable));
-            return "/book/homeBook";
-        }else {
-            return "redirect:/login";
-        }
-//        if (accountMember == null || "guest".equals(accountMember.getAccount())){
-//            return "redirect:/login";
-//        }
-//        model.addAttribute("book", bookService.findAll(pageable));
-//        return "/book/homeBook";
+        model.addAttribute("book", bookService.findAll(pageable));
+        return "/book/homeBook";
     }
 
     @GetMapping("/book/{id}")
@@ -144,23 +133,21 @@ public class BookController {
     }
 
     @GetMapping("/borrow")
-    public String brrow(Model model, @RequestParam int id,@SessionAttribute(value = "accountMember", required = false) AccountMember accountMember,
-                        @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser) throws NotAvailableException {
+    public String brrow(Model model, @RequestParam int id, Principal principal, @ModelAttribute AccountMember accountMember) throws NotAvailableException {
         Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
-        model.addAttribute("account",accountMember.getAccount());
+        model.addAttribute("account",principal.getName());
         model.addAttribute("availableCode", bookService.getNextAvailableCode(book));
         return "/view/bookView";
     }
 
     @PostMapping("/borrowBook")
-    public String borrowBook(@RequestParam int id,@ModelAttribute Book book,@SessionAttribute(value = "accountMember", required = false)
-            AccountMember accountMember, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException, NotAvailableException {
+    public String borrowBook(@RequestParam int id,@ModelAttribute Book book,Principal principal, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException, NotAvailableException {
         Book books = bookService.findBookById(id);
         if (books.getQuantity()<=0){
             throw new QuantityZeroException();
        }
-
+        AccountMember accountMember = accountMemberRepository.findByAccount(principal.getName());
         bookService.borrow(book, usedCode,accountMember);
         redirectAttributes.addFlashAttribute("message", usedCode + "borrow");
         return "redirect:/bookview/" + book.getId();

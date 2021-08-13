@@ -18,6 +18,27 @@ public class AccountMember  {
     private Member member;
     @ManyToMany(mappedBy = "accountMembers")
     List<Book> books;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "account_role", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public AccountMember(int id, String account, String pass, Date dateCreate, Member member, List<Book> books, List<Role> roles) {
+        this.id = id;
+        this.account = account;
+        this.pass = pass;
+        this.dateCreate = dateCreate;
+        this.member = member;
+        this.books = books;
+        this.roles = roles;
+    }
 
     public AccountMember(int id, String account, String pass, Member member) {
         this.id = id;

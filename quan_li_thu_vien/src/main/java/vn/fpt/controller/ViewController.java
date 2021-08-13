@@ -23,7 +23,7 @@ import vn.fpt.validation.ReturnCodeWrapper;
 import java.util.List;
 
 @Controller
-@SessionAttributes("accountMember")
+
 public class ViewController {
     @Autowired
     BookService bookService;
@@ -34,10 +34,7 @@ public class ViewController {
     @Autowired
     AccountService accountService;
 
-    @ModelAttribute("accountMember")
-    public AccountMember accountMember() {
-        return new AccountMember();
-    }
+
     @GetMapping("/")
     public String homeView(Model model, @PageableDefault (value = 6) Pageable pageable) {
         model.addAttribute("book", bookService.findAll(pageable));
@@ -80,10 +77,10 @@ public class ViewController {
         return null;
     }
     @GetMapping("/bookview/{id}")
-    public String bookView(@PathVariable int id, Model model,@ModelAttribute ReturnCodeWrapper returnCodeWrapper,@SessionAttribute("accountMember") AccountMember accountMember) throws NotAvailableException {
+    public String bookView(@PathVariable int id, Model model,@ModelAttribute ReturnCodeWrapper returnCodeWrapper) throws NotAvailableException {
         Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
-        model.addAttribute("user", accountMember.getAccount());
+
         model.addAttribute("catagory", catagoryService.findAllCatagory());
         model.addAttribute("availableCode", bookService.getNextAvailableCode(book));
         model.addAttribute("returnCodeWrapper", returnCodeWrapper);
@@ -97,8 +94,8 @@ public class ViewController {
         return "/view/bookView";
     }
     @PostMapping("/returnBook")
-    public String returnBook(@ModelAttribute Book book,@SessionAttribute(value = "accountMember", required = false)
-            AccountMember accountMember, @RequestParam  Integer returnCodeWrapper
+    public String returnBook(@ModelAttribute Book book,
+           @ModelAttribute AccountMember accountMember, @RequestParam  Integer returnCodeWrapper
             ,Model model) throws WrongCodeException, NotAvailableException {
         if (returnCodeWrapper < 10000 || returnCodeWrapper>99999){
 //            model.addAttribute("returnCodeWrapper", returnCodeWrapper);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:insert="fragments/header_view"></div>
 <body>
 <div class="container" style="height: auto">
@@ -41,12 +42,12 @@
                             </div>
                             <div class="text" th:text="'Author: '+${book.author.getName()}">
                             </div>
-                            <a href="/login" th:if="${user == null}" class="btn btn-primary"
+                            <a href="/login"  sec:authorize="!isAuthenticated()" class="btn btn-primary"
                             >Sign in to borrow books</a>
                             <a th:href="@{/borrow(id=${book.id})}"
-                               th:if="${book.quantity > 0 && user != null}" class="btn btn-primary"
+                               th:if="${book.quantity > 0}" sec:authorize="isAuthenticated()" class="btn btn-primary"
                                data-toggle="modal" data-target="#exampleModalCenter1">Borrow</a>
-                            <a th:href="@{/return(id=${book.id})}" th:if="${user!= null}"
+                            <a th:href="@{/return(id=${book.id})}"  sec:authorize="isAuthenticated()"
                                class="btn btn-primary"
                                data-toggle="modal" data-target="#exampleModalCenter3">Return</a>
                         </div>

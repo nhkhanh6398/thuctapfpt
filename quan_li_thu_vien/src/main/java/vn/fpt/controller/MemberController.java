@@ -1,6 +1,7 @@
 package vn.fpt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +30,14 @@ public class MemberController {
     @PostMapping("/addMember")
     public String create(@Validated @ModelAttribute Member member, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         new Member().validate(member,bindingResult);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (bindingResult.hasFieldErrors()) {
             return "member/createMember";
         } else {
             member.getAccount().setDateCreate(new Date(System.currentTimeMillis()));
             redirectAttributes.addFlashAttribute("message", "Member " + member.getNameMember()
                     + " created!" + "\n" + "Please Login " + member.getAccount().getAccount());
+            member.getAccount().setPass(bCryptPasswordEncoder.encode(member.getAccount().getPass()));
             memberService.createAccount(member);
             return "redirect:/";
         }

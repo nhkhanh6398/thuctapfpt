@@ -15,5 +15,6 @@ public interface AccountMemberRepository extends JpaRepository<AccountMember,Int
     AccountMember checkLogin(@Param("account") String user,@Param("pass") String pass);
 
 //    Set<Book> findAllByBooks();
+    AccountMember findByAccount(String account);
 
 }
