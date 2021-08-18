@@ -12,21 +12,15 @@ import vn.fpt.model.Author;
 import vn.fpt.service.AuthorService;
 
 @Controller
+
 public class AuthorController {
 
     @Autowired
     AuthorService authorService;
 
     @GetMapping("/authors")
-    public String home(Model model,@SessionAttribute(value = "accountMember", required = false) AccountMember accountMember,
-                       @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser){
-        if ("admin@gmail.com".equals(cookieUser)) {
-            accountMember = new AccountMember();
-            accountMember.setAccount(cookieUser);
-        }
-        if (accountMember == null || "guest".equals(accountMember.getAccount())){
-            return "redirect:/login";
-        }
+    public String home(Model model){
+
         model.addAttribute("authors",authorService.findAllAuthors());
 
         return "/author/homeAuthor";

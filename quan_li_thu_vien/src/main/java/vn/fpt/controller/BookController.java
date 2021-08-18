@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+
 public class BookController {
     @Autowired
     BookService bookService;
@@ -37,9 +38,6 @@ public class BookController {
     AccountService accountService;
     @Autowired
     AccountMemberRepository accountMemberRepository;
-
-
-
 
     @GetMapping("/books")
     public String homeBook(@PageableDefault(value = 5) Pageable pageable, Model model) {
@@ -131,34 +129,11 @@ public class BookController {
         model.addAttribute("keyword", keyword);
         return "/book/homeBook";
     }
-
-    @GetMapping("/borrow")
-    public String brrow(Model model, @RequestParam int id, Principal principal, @ModelAttribute AccountMember accountMember) throws NotAvailableException {
-        Book book = bookService.findBookById(id);
-        model.addAttribute("book", book);
-        model.addAttribute("account",principal.getName());
-        model.addAttribute("availableCode", bookService.getNextAvailableCode(book));
-        return "/view/bookView";
-    }
-
-    @PostMapping("/borrowBook")
-    public String borrowBook(@RequestParam int id,@ModelAttribute Book book,Principal principal, @RequestParam int usedCode, RedirectAttributes redirectAttributes) throws QuantityZeroException, NotAvailableException {
-        Book books = bookService.findBookById(id);
-        if (books.getQuantity()<=0){
-            throw new QuantityZeroException();
-       }
-        AccountMember accountMember = accountMemberRepository.findByAccount(principal.getName());
-        bookService.borrow(book, usedCode,accountMember);
-        redirectAttributes.addFlashAttribute("message", usedCode + "borrow");
-        return "redirect:/bookview/" + book.getId();
-    }
-
     @GetMapping("/viewborrow")
     public String viewBorrow(Model model) {
         model.addAttribute("listBorrow", codeBookService.findAll());
         return "/borrow/viewBorrow";
     }
-
     @ExceptionHandler(NotAvailableException.class)
     public String notAvailable() {
         return "/exception/error_not_available";

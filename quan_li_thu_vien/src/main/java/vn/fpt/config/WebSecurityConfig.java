@@ -36,21 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .defaultSuccessUrl("/").permitAll()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/books").hasRole("ADMIN")
-                .antMatchers("/member").hasRole("ADMIN")
-                .antMatchers("/categories").hasRole("ADMIN")
-                .antMatchers("/authors").hasRole("ADMIN")
-                .antMatchers("/viewborrow").hasRole("ADMIN")
-                .antMatchers("/accountBook").hasRole("ADMIN")
-                .antMatchers("/add").hasRole("ADMIN")
-                .antMatchers("/update/{id}").hasRole("ADMIN")
-                .antMatchers("/delete/{id}").hasRole("ADMIN")
-                .antMatchers("/addCategory").hasRole("ADMIN")
-                .antMatchers("/updateCategory/{id}").hasRole("ADMIN")
-                .antMatchers("/addAuthor").hasRole("ADMIN")
-                .antMatchers("/updateAuthor/{id}").hasRole("ADMIN");
+                .authorizeRequests().antMatchers("/").permitAll()
+
+                .antMatchers("/books","/member","/categories","/authors","/viewborrow","/accountBook","/add",
+                        "/update/{id}","/delete/{id}"
+                ,"/addCategory","/updateCategory/{id}","/addAuthor","/updateAuthor/{id}").hasRole("ADMIN");
         http.authorizeRequests().and().rememberMe()
                 /* câu hình nơi lưu thông tin remember me và thời gian lưu cookie tại client*/
                 .tokenRepository(this.persistentTokenRepository()).tokenValiditySeconds(60 * 60 * 10);

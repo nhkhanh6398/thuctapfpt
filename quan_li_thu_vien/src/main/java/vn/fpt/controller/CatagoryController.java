@@ -12,20 +12,14 @@ import vn.fpt.model.Catagory;
 import vn.fpt.service.CatagoryService;
 
 @Controller
+
 public class CatagoryController {
     @Autowired
     CatagoryService catagoryService;
 
     @GetMapping("/categories")
-    public String home(Model model,@SessionAttribute(value = "accountMember", required = false) AccountMember accountMember,
-                       @CookieValue(value = "loginCookie", defaultValue = " ") String cookieUser) {
-        if ("admin@gmail.com".equals(cookieUser)) {
-            accountMember = new AccountMember();
-            accountMember.setAccount(cookieUser);
-        }
-        if (accountMember == null || "guest".equals(accountMember.getAccount())){
-            return "redirect:/login";
-        }
+    public String home(Model model) {
+
         model.addAttribute("categories", catagoryService.findAllCatagory());
         return "/catagory/homeCatagory";
     }
